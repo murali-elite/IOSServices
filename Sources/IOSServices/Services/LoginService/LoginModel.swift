@@ -1,6 +1,6 @@
 //
 //  File.swift
-//  
+//
 //
 //  Created by Murali moorthy on 8/2/24.
 //
@@ -43,3 +43,4 @@ public struct LoginModel: Decodable {
     /// The count of router onboarding steps completed by the user.
     public var routerOnboardedCounter: Int?
 }
+

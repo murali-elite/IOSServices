@@ -1,6 +1,6 @@
 //
 //  File.swift
-//  
+//
 //
 //  Created by Murali moorthy on 8/2/24.
 //
@@ -10,6 +10,7 @@ import Alamofire
 
 /// A service that handles login requests and interacts with the network.
 public struct LoginService: LoginServiceHandler {
+    
     /// The network manager used to perform network requests.
     var networkManager: NetworkManager = NetworkManager()
 
@@ -17,14 +18,20 @@ public struct LoginService: LoginServiceHandler {
     var baseURL: String
 
     /// The full URL for the login endpoint, constructed from the base URL and the endpoint path.
+    ///
+    /// - Example: `https://api.example.com/v1/mobile/account/login`
     var url: String {
         BaseURL.main + APIVersion.v1.rawValue + APIAuthentication.mobile.rawValue + APIEndpoints.login.rawValue
     }
 
     /// The HTTP method used for the request.
+    ///
+    /// - Example: `.post`
     var method: HTTPMethod
 
     /// Optional headers to include in the request.
+    ///
+    /// - Example: `["Content-Type": "application/json"]`
     var headers: HTTPHeaders?
 
     /// Initializes a new instance of `LoginService` with the specified base URL, HTTP method, and optional headers.
@@ -47,12 +54,12 @@ public struct LoginService: LoginServiceHandler {
     /// - Throws: An error if the request fails or if decoding the response fails.
     /// - Returns: A `LoginModel` object containing the response data.
     public func sendLoginRequest(_ parameters: Parameters) async throws -> LoginModel {
-        print("\(url) \n \(method) \n \(parameters)")
-      return try await networkManager.requestDecodable(
+        return try await networkManager.requestDecodable(
             url,
             method: method,
             parameters: parameters,
-            headers: headers)
+            headers: headers
+        )
     }
 }
 
