@@ -7,7 +7,6 @@
 
 import Foundation
 
-
 /// An enumeration that defines the base URLs used in the application.
 public enum BaseURL: String {
     case dev = "https://dev.rgw.calix.ai/map/"
@@ -17,7 +16,7 @@ public enum BaseURL: String {
     case stage = "https://stage.rgw.calix.ai/map/"
     case ssoDev = "https://dev.api.calix.ai/"
     case ssoStage = "https://stage.api.calix.ai/"
-    
+
     static var main: String {
         BaseURL.stage.rawValue
     }

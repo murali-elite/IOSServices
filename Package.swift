@@ -15,6 +15,8 @@ let package = Package(
     dependencies: [
         // Dependencies declare other packages that this package depends on.
         .package(url: "https://github.com/Alamofire/Alamofire.git", .upToNextMajor(from: "5.6.4")),
+        .package(url: "https://github.com/AliSoftware/OHHTTPStubs.git", .upToNextMajor(from: "9.1.0")),
+        .package(url: "https://github.com/SimplyDanny/SwiftLintPlugins.git", branch: "main")
         // Add other dependencies here if needed
     ],
     targets: [
@@ -24,9 +26,17 @@ let package = Package(
             name: "IOSServices",
             dependencies: [
                 "Alamofire" // Specify Alamofire as a dependency for the Services target
+            ],
+            plugins: [
+                .plugin(name: "SwiftLintBuildToolPlugin", package: "SwiftLintPlugins")
             ]),
         .testTarget(
             name: "IOSServicesTests",
-            dependencies: ["IOSServices"]),
+            dependencies: ["IOSServices",
+                           .product(name: "OHHTTPStubs", package: "OHHTTPStubs"),
+                           .product(name: "OHHTTPStubsSwift", package: "OHHTTPStubs")],
+            plugins: [
+                .plugin(name: "SwiftLintBuildToolPlugin", package: "SwiftLintPlugins")
+            ]),
     ]
 )

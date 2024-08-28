@@ -1,38 +1,37 @@
 //
 //  File.swift
+//  
 //
-//
-//  Created by Murali moorthy on 8/2/24.
+//  Created by Murali moorthy on 8/21/24.
 //
 
 import Foundation
 import Alamofire
 
-/// A service that handles login requests and interacts with the network.
-public struct LoginService: LoginServiceHandler {
-    
+// A service that handles login requests and interacts with the network.
+public struct WhitelabeInfoService {
     /// The network manager used to perform network requests.
-    var networkManager: NetworkManager = NetworkManager()
+    var networkManager: NetworkHandler = NetworkManager()
 
-    /// The base URL for the API requests.
-    var baseURL: String
+    private var configuration: NetworkServiceConfigurable
 
-    /// The full URL for the login endpoint, constructed from the base URL and the endpoint path.
-    ///
-    /// - Example: `https://api.example.com/v1/mobile/account/login`
-    var url: String {
-        BaseURL.main + APIVersion.v1.rawValue + APIAuthentication.mobile.rawValue + APIEndpoints.login.rawValue
+    private var url: String {
+        let baseUrl = configuration.mapBaseUrl(version: .version1)
+        let authType = configuration.authenticationType.rawValue
+        let endpoint = APIEndpoints.whitelabelInfo.rawValue
+        return "\(baseUrl)/\(authType)/\(endpoint)"
     }
 
     /// The HTTP method used for the request.
-    ///
     /// - Example: `.post`
-    var method: HTTPMethod
+    private var method: HTTPMethod = .get
 
     /// Optional headers to include in the request.
     ///
     /// - Example: `["Content-Type": "application/json"]`
-    var headers: HTTPHeaders?
+    private var headers: HTTPHeaders? {
+        ["Authorization": configuration.authToken ?? ""]
+    }
 
     /// Initializes a new instance of `LoginService` with the specified base URL, HTTP method, and optional headers.
     ///
@@ -40,12 +39,10 @@ public struct LoginService: LoginServiceHandler {
     ///   - baseURL: The base URL to use for API requests.
     ///   - method: The HTTP method to use for the request.
     ///   - headers: Optional headers to include in the request.
-    public init(baseURL: String,
-                method: HTTPMethod,
-                headers: HTTPHeaders? = nil) {
-        self.baseURL = baseURL
-        self.method = method
-        self.headers = headers
+    public init(configuration: NetworkServiceConfigurable,
+                networkManager: NetworkHandler = NetworkManager()) {
+        self.configuration = configuration
+        self.networkManager = networkManager
     }
 
     /// Sends a login request with the provided parameters and returns a `LoginModel` object.
@@ -53,8 +50,8 @@ public struct LoginService: LoginServiceHandler {
     /// - Parameter parameters: The parameters to include in the login request.
     /// - Throws: An error if the request fails or if decoding the response fails.
     /// - Returns: A `LoginModel` object containing the response data.
-    public func sendLoginRequest(_ parameters: Parameters) async throws -> LoginModel {
-        return try await networkManager.requestDecodable(
+    public func request(parameters: RequestParameters? = nil) async throws -> WhitelabelInfoModel {
+        try await networkManager.requestDecodable(
             url,
             method: method,
             parameters: parameters,
@@ -62,4 +59,3 @@ public struct LoginService: LoginServiceHandler {
         )
     }
 }
-
